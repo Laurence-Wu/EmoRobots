@@ -1,0 +1,289 @@
+EEG Signal Analysis Report
+==================================================
+
+Dataset Information:
+- Number of channels: 14
+- Sampling rate: 256.0163850486431 Hz
+- Data shape: (7683, 18)
+- Duration: 30.01 seconds
+
+Channel: AF3
+--------------------
+Statistics:
+  Mean: 4364.08 µV
+  Std: 16.73 µV
+  Range: 4296.15 to 4447.44 µV
+  Skewness: -0.040
+  Kurtosis: 2.156
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 15.13 dB
+  Artifact Ratio: 0.015
+
+Channel: F7
+--------------------
+Statistics:
+  Mean: 4347.71 µV
+  Std: 24.20 µV
+  Range: 4234.49 to 4451.03 µV
+  Skewness: -0.295
+  Kurtosis: 3.358
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 17.34 dB
+  Artifact Ratio: 0.023
+
+Channel: F3
+--------------------
+Statistics:
+  Mean: 4366.31 µV
+  Std: 13.46 µV
+  Range: 4303.72 to 4414.74 µV
+  Skewness: -0.487
+  Kurtosis: 1.401
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 13.25 dB
+  Artifact Ratio: 0.012
+
+Channel: FC5
+--------------------
+Statistics:
+  Mean: 4370.27 µV
+  Std: 11.41 µV
+  Range: 4327.95 to 4413.33 µV
+  Skewness: -0.057
+  Kurtosis: 0.635
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 12.31 dB
+  Artifact Ratio: 0.006
+
+Channel: T7
+--------------------
+Statistics:
+  Mean: 4398.33 µV
+  Std: 7.60 µV
+  Range: 4372.95 to 4423.20 µV
+  Skewness: 0.013
+  Kurtosis: -0.097
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 11.65 dB
+  Artifact Ratio: 0.001
+
+Channel: P7
+--------------------
+Statistics:
+  Mean: 4338.84 µV
+  Std: 7.98 µV
+  Range: 4308.08 to 4375.64 µV
+  Skewness: 0.548
+  Kurtosis: 1.505
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 11.83 dB
+  Artifact Ratio: 0.013
+
+Channel: O1
+--------------------
+Statistics:
+  Mean: 4331.87 µV
+  Std: 7.20 µV
+  Range: 4304.74 to 4358.85 µV
+  Skewness: 0.051
+  Kurtosis: 0.077
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 9.73 dB
+  Artifact Ratio: 0.003
+
+Channel: O2
+--------------------
+Statistics:
+  Mean: 4331.64 µV
+  Std: 10.33 µV
+  Range: 4299.36 to 4373.72 µV
+  Skewness: 0.249
+  Kurtosis: 0.172
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 11.86 dB
+  Artifact Ratio: 0.003
+
+Channel: P8
+--------------------
+Statistics:
+  Mean: 4314.34 µV
+  Std: 12.03 µV
+  Range: 4272.82 to 4357.31 µV
+  Skewness: -0.091
+  Kurtosis: 0.150
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 12.63 dB
+  Artifact Ratio: 0.004
+
+Channel: T8
+--------------------
+Statistics:
+  Mean: 4297.36 µV
+  Std: 14.24 µV
+  Range: 4236.41 to 4370.77 µV
+  Skewness: -0.222
+  Kurtosis: 1.946
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 13.62 dB
+  Artifact Ratio: 0.017
+
+Channel: FC6
+--------------------
+Statistics:
+  Mean: 4502.26 µV
+  Std: 23.43 µV
+  Range: 4386.54 to 4607.82 µV
+  Skewness: -0.445
+  Kurtosis: 4.307
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 16.12 dB
+  Artifact Ratio: 0.023
+
+Channel: F4
+--------------------
+Statistics:
+  Mean: 4445.05 µV
+  Std: 17.78 µV
+  Range: 4346.80 to 4509.74 µV
+  Skewness: -0.556
+  Kurtosis: 2.716
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 13.71 dB
+  Artifact Ratio: 0.015
+
+Channel: F8
+--------------------
+Statistics:
+  Mean: 4420.34 µV
+  Std: 41.13 µV
+  Range: 4244.23 to 4614.74 µV
+  Skewness: -0.038
+  Kurtosis: 4.601
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 20.55 dB
+  Artifact Ratio: 0.027
+
+Channel: AF4
+--------------------
+Statistics:
+  Mean: 4473.01 µV
+  Std: 22.45 µV
+  Range: 4359.87 to 4565.51 µV
+  Skewness: -0.446
+  Kurtosis: 2.878
+
+Frequency Band Powers:
+  Delta: 0.00e+00 µV²/Hz
+  Theta: 0.00e+00 µV²/Hz
+  Alpha: 0.00e+00 µV²/Hz
+  Beta: 0.00e+00 µV²/Hz
+  Gamma: 0.00e+00 µV²/Hz
+
+Signal Quality:
+  SNR: 16.54 dB
+  Artifact Ratio: 0.016
+

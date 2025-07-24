@@ -1,0 +1,76 @@
+Mental State Analysis Report
+==================================================
+
+Dataset Overview:
+- Number of metrics: 7
+- Available metrics: attention, eng, exc, lex, str, rel, int
+- Data duration: 60 samples
+
+Basic Statistics:
+--------------------
+
+Attention:
+  Mean: 0.545
+  Median: 0.541
+  Std Dev: 0.046
+  Range: 0.466 - 0.634
+  Coefficient of Variation: 0.084
+
+Eng:
+  Mean: 0.555
+  Median: 0.541
+  Std Dev: 0.096
+  Range: 0.401 - 0.725
+  Coefficient of Variation: 0.174
+
+Exc:
+  Mean: 0.548
+  Median: 0.543
+  Std Dev: 0.043
+  Range: 0.478 - 0.644
+  Coefficient of Variation: 0.078
+
+Lex:
+  Mean: 0.000
+  Median: 0.000
+  Std Dev: 0.000
+  Range: 0.000 - 0.000
+  Coefficient of Variation: 0.000
+
+Str:
+  Mean: 0.563
+  Median: 0.547
+  Std Dev: 0.068
+  Range: 0.462 - 0.687
+  Coefficient of Variation: 0.121
+
+Rel:
+  Mean: 0.560
+  Median: 0.587
+  Std Dev: 0.079
+  Range: 0.412 - 0.672
+  Coefficient of Variation: 0.141
+
+Int:
+  Mean: 0.558
+  Median: 0.585
+  Std Dev: 0.077
+  Range: 0.416 - 0.679
+  Coefficient of Variation: 0.137
+
+
+Strongest Correlations:
+-------------------------
+  rel - int: 0.973
+  str - int: -0.947
+  exc - int: 0.917
+  exc - str: -0.892
+  exc - rel: 0.872
+
+
+Significant State Changes Detected:
+-----------------------------------
+
+Exc: 1 significant changes
+  Largest change: 0.012
+  Average change: 0.012

@@ -1,0 +1,59 @@
+Motion Analysis Report
+==============================
+
+Dataset Overview:
+- Motion data shape: (960, 12)
+- Available sensors: Q0, Q1, Q2, Q3, ACCX, ACCY, ACCZ, MAGX, MAGY, MAGZ
+- Data duration: 960 samples
+
+Head Orientation Analysis:
+------------------------------
+
+Roll:
+  Mean: -102.46°
+  Std: 0.19°
+  Range: -102.93° to -101.81°
+
+Pitch:
+  Mean: -73.51°
+  Std: 0.11°
+  Range: -73.70° to -73.21°
+
+Yaw:
+  Mean: 178.14°
+  Std: 0.24°
+  Range: 177.34° to 178.62°
+
+
+Movement Detection:
+--------------------
+Roll Movement: 0 events
+Pitch Movement: 0 events
+Yaw Movement: 0 events
+Acceleration Movement: 0 events
+
+Total movement events: 0
+
+
+Stability Analysis:
+--------------------
+Roll Stability:
+  Average stability: 0.878
+  Min stability: 0.829
+  Max stability: 0.965
+
+Pitch Stability:
+  Average stability: 0.926
+  Min stability: 0.872
+  Max stability: 0.996
+
+Yaw Stability:
+  Average stability: 0.851
+  Min stability: 0.773
+  Max stability: 0.950
+
+Acceleration Stability:
+  Average stability: 0.993
+  Min stability: 0.993
+  Max stability: 1.000
+

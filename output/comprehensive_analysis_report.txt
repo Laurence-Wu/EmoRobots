@@ -1,0 +1,53 @@
+Comprehensive EEG and Sensor Data Analysis Report
+============================================================
+
+Session Information:
+--------------------
+Analysis Date: 2025-07-24 12:45:26
+Data Directory: ../collected_data
+
+EEG Data:
+  Shape: (7683, 18)
+  Duration: 30.007799 seconds
+  Sampling Rate: 256.0163850486431 Hz
+
+MET Data:
+  Shape: (60, 13)
+  Duration: 29.5 seconds
+  Sampling Rate: 2.0 Hz
+
+MOT Data:
+  Shape: (960, 12)
+  Duration: 29.9687 seconds
+  Sampling Rate: 32.00102403276905 Hz
+
+POW Data:
+  Shape: (240, 70)
+  Duration: 29.875 seconds
+  Sampling Rate: 8.0 Hz
+
+DEV Data:
+  Shape: (60, 15)
+  Duration: 0.0 seconds
+  Sampling Rate: None Hz
+
+
+Analysis Summary:
+--------------------
+
+EEG Analysis:
+  Channels analyzed: 14
+  Sample channel (AF3) statistics:
+    Mean: 4364.08 µV
+    Std: 16.73 µV
+
+Mental State Analysis:
+  Metrics analyzed: 7
+  Average attention: 0.545
+  Average engagement: 0.555
+
+Motion Analysis:
+  Head orientation variability:
+    Roll: 0.19°
+    Pitch: 0.11°
+    Yaw: 0.24°
