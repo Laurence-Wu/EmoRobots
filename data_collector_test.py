@@ -21,7 +21,7 @@ import json
 import csv
 import os
 from datetime import datetime
-from core.data_collector import DataCollector
+from data_collector import DataCollector
 from dotenv import load_dotenv
 
 

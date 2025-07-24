@@ -2,7 +2,7 @@ import os
 import time
 import csv
 from datetime import datetime
-from core.cortex import Cortex
+from cortex import Cortex
 
 class DataCollector:
     """

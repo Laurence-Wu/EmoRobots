@@ -1,4 +1,4 @@
-from core.cortex import Cortex
+from cortex import Cortex
 import time
 import threading
 from dotenv import load_dotenv
