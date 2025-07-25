@@ -16,8 +16,11 @@ import json
 import csv
 import serial
 import logging
+import threading
+import signal
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
+from collections import deque, defaultdict
 
 # Add the servo SDK path - adjust if needed
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -536,52 +539,424 @@ class MockServoManager:
             self.mock_angles[servo_id] = angle
 
 
+class ServoContinuousMonitor:
+    """Continuous servo monitoring with real-time chart display"""
+    
+    def __init__(self, port: str = None, baudrate: int = None, update_interval: float = 1.0):
+        self.config = ServoTestConfig()
+        self.port = port or self.config.DEFAULT_PORT
+        self.baudrate = baudrate or self.config.DEFAULT_BAUDRATE
+        self.update_interval = update_interval
+        
+        # Initialize connection
+        self.uart = None
+        self.control = None
+        self.connected = False
+        self.running = False
+        
+        # Data storage for charts
+        self.max_history = 100  # Keep last 100 readings
+        self.servo_data = defaultdict(lambda: {
+            'timestamps': deque(maxlen=self.max_history),
+            'angles': deque(maxlen=self.max_history),
+            'voltages': deque(maxlen=self.max_history),
+            'currents': deque(maxlen=self.max_history),
+            'temperatures': deque(maxlen=self.max_history),
+            'powers': deque(maxlen=self.max_history)
+        })
+        
+        # Available servos
+        self.available_servos = []
+        
+        # Setup signal handler for graceful shutdown
+        signal.signal(signal.SIGINT, self.signal_handler)
+        
+        # Setup logging
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+        self.logger = logging.getLogger(__name__)
+    
+    def signal_handler(self, signum, frame):
+        """Handle Ctrl+C gracefully"""
+        print("\n\nShutting down monitor...")
+        self.stop()
+        sys.exit(0)
+    
+    def connect(self) -> bool:
+        """Establish connection to servo controller"""
+        try:
+            self.uart = serial.Serial(
+                port=self.port,
+                baudrate=self.baudrate,
+                parity=serial.PARITY_NONE,
+                stopbits=1,
+                bytesize=8,
+                timeout=0.1
+            )
+            
+            if uservo:
+                self.control = uservo.UartServoManager(self.uart)
+            else:
+                self.control = MockServoManager()
+            
+            self.connected = True
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to connect: {str(e)}")
+            return False
+    
+    def disconnect(self):
+        """Close connection"""
+        try:
+            if self.uart and self.uart.is_open:
+                self.uart.close()
+            self.connected = False
+        except Exception as e:
+            self.logger.error(f"Error during disconnect: {str(e)}")
+    
+    def discover_servos(self) -> List[int]:
+        """Quick servo discovery"""
+        self.logger.info("Discovering servos...")
+        available = []
+        
+        # Test first 10 servo IDs for quick discovery
+        for servo_id in range(10):
+            try:
+                if self.control.ping(servo_id):
+                    available.append(servo_id)
+                    self.logger.info(f"Found servo at ID {servo_id}")
+            except:
+                pass
+        
+        self.available_servos = available
+        return available
+    
+    def read_servo_data(self, servo_id: int) -> Dict:
+        """Read current servo data"""
+        data = {
+            'timestamp': datetime.now(),
+            'servo_id': servo_id,
+            'online': False,
+            'angle': None,
+            'voltage': None,
+            'current': None,
+            'temperature': None,
+            'power': None
+        }
+        
+        try:
+            # Check if online
+            data['online'] = self.control.ping(servo_id)
+            
+            if data['online']:
+                # Read all parameters
+                try:
+                    data['angle'] = self.control.query_servo_angle(servo_id)
+                except:
+                    pass
+                
+                try:
+                    data['voltage'] = self.control.query_voltage(servo_id)
+                except:
+                    pass
+                
+                try:
+                    data['current'] = self.control.query_current(servo_id)
+                except:
+                    pass
+                
+                try:
+                    data['temperature'] = self.control.query_temperature(servo_id)
+                except:
+                    pass
+                
+                try:
+                    data['power'] = self.control.query_power(servo_id)
+                except:
+                    pass
+        
+        except Exception as e:
+            self.logger.debug(f"Error reading servo {servo_id}: {str(e)}")
+        
+        return data
+    
+    def update_servo_data(self, servo_id: int, data: Dict):
+        """Update stored data for a servo"""
+        servo_history = self.servo_data[servo_id]
+        
+        servo_history['timestamps'].append(data['timestamp'])
+        servo_history['angles'].append(data.get('angle'))
+        servo_history['voltages'].append(data.get('voltage'))
+        servo_history['currents'].append(data.get('current'))
+        servo_history['temperatures'].append(data.get('temperature'))
+        servo_history['powers'].append(data.get('power'))
+    
+    def clear_screen(self):
+        """Clear terminal screen"""
+        os.system('clear')
+    
+    def create_simple_chart(self, values: List, title: str, unit: str = "", width: int = 50) -> str:
+        """Create a simple ASCII chart"""
+        if not values or all(v is None for v in values):
+            return f"{title}: No data available"
+        
+        # Filter out None values
+        valid_values = [v for v in values if v is not None]
+        if not valid_values:
+            return f"{title}: No valid data"
+        
+        min_val = min(valid_values)
+        max_val = max(valid_values)
+        current_val = valid_values[-1]
+        
+        if max_val == min_val:
+            normalized = 0.5
+        else:
+            normalized = (current_val - min_val) / (max_val - min_val)
+        
+        # Create bar
+        filled_width = int(normalized * width)
+        bar = "█" * filled_width + "░" * (width - filled_width)
+        
+        return f"{title}: {current_val:.2f}{unit} [{bar}] (min: {min_val:.2f}, max: {max_val:.2f})"
+    
+    def display_servo_charts(self):
+        """Display real-time charts for all servos"""
+        self.clear_screen()
+        
+        print("=" * 80)
+        print("           REAL-TIME SERVO MONITORING DASHBOARD")
+        print("=" * 80)
+        print(f"Update Interval: {self.update_interval}s | Press Ctrl+C to stop")
+        print(f"Connected to: {self.port} @ {self.baudrate} baud")
+        print(f"Active Servos: {len(self.available_servos)} | IDs: {self.available_servos}")
+        print("=" * 80)
+        
+        if not self.available_servos:
+            print("No servos found. Discovering...")
+            return
+        
+        for servo_id in self.available_servos:
+            servo_history = self.servo_data[servo_id]
+            
+            if not servo_history['timestamps']:
+                print(f"Servo {servo_id}: Waiting for data...")
+                continue
+            
+            print(f"\n📊 SERVO {servo_id} - Real-time Status:")
+            print("-" * 60)
+            
+            # Angle chart
+            angle_chart = self.create_simple_chart(
+                list(servo_history['angles']), 
+                "Angle", 
+                "°", 
+                40
+            )
+            print(f"  {angle_chart}")
+            
+            # Voltage chart
+            voltage_chart = self.create_simple_chart(
+                list(servo_history['voltages']), 
+                "Voltage", 
+                "V", 
+                40
+            )
+            print(f"  {voltage_chart}")
+            
+            # Current chart
+            current_chart = self.create_simple_chart(
+                list(servo_history['currents']), 
+                "Current", 
+                "A", 
+                40
+            )
+            print(f"  {current_chart}")
+            
+            # Temperature chart
+            temp_chart = self.create_simple_chart(
+                list(servo_history['temperatures']), 
+                "Temperature", 
+                "°C", 
+                40
+            )
+            print(f"  {temp_chart}")
+            
+            # Power chart
+            power_chart = self.create_simple_chart(
+                list(servo_history['powers']), 
+                "Power", 
+                "W", 
+                40
+            )
+            print(f"  {power_chart}")
+            
+            # Show last 10 readings as sparkline
+            angles = [a for a in list(servo_history['angles'])[-10:] if a is not None]
+            if angles:
+                sparkline = self.create_sparkline(angles)
+                print(f"  Angle Trend (last 10): {sparkline}")
+        
+        print("\n" + "=" * 80)
+        print(f"Last Update: {datetime.now().strftime('%H:%M:%S')}")
+    
+    def create_sparkline(self, values: List[float]) -> str:
+        """Create a simple sparkline chart"""
+        if not values:
+            return "No data"
+        
+        if len(values) == 1:
+            return "▄"
+        
+        min_val = min(values)
+        max_val = max(values)
+        
+        if max_val == min_val:
+            return "▄" * len(values)
+        
+        # Normalize values to 0-7 range for block characters
+        spark_chars = ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
+        normalized = [(v - min_val) / (max_val - min_val) * 7 for v in values]
+        
+        return "".join(spark_chars[min(int(v), 7)] for v in normalized)
+    
+    def monitoring_loop(self):
+        """Main monitoring loop"""
+        if not self.connect():
+            print("Failed to connect to servo controller")
+            return
+        
+        # Discover servos
+        self.discover_servos()
+        
+        if not self.available_servos:
+            print("No servos found. Please check connections.")
+            self.disconnect()
+            return
+        
+        self.running = True
+        print(f"Starting continuous monitoring of {len(self.available_servos)} servos...")
+        time.sleep(2)
+        
+        try:
+            while self.running:
+                # Read data from all servos
+                for servo_id in self.available_servos:
+                    data = self.read_servo_data(servo_id)
+                    self.update_servo_data(servo_id, data)
+                
+                # Display charts
+                self.display_servo_charts()
+                
+                # Wait for next update
+                time.sleep(self.update_interval)
+                
+        except KeyboardInterrupt:
+            print("\nMonitoring stopped by user")
+        except Exception as e:
+            print(f"\nMonitoring error: {e}")
+        finally:
+            self.stop()
+    
+    def stop(self):
+        """Stop monitoring"""
+        self.running = False
+        self.disconnect()
+        print("Monitoring stopped.")
+
+
+def start_continuous_monitoring():
+    """Start continuous servo monitoring"""
+    monitor = ServoContinuousMonitor(update_interval=2.0)  # Update every 2 seconds
+    monitor.monitoring_loop()
+
+
 def main():
     """Main function to run comprehensive servo tests"""
     
-    # Create servo tester with default settings
-    tester = ServoTester()
-    
-    print("=" * 60)
+    print("=" * 70)
     print("   FASHIONSTAR SERVO COMPREHENSIVE TEST SCRIPT")
-    print("=" * 60)
-    print(f"Port: {tester.port}")
-    print(f"Baudrate: {tester.baudrate}")
-    print(f"Testing Servo IDs: 0-{len(tester.config.DEFAULT_SERVO_IDS)-1} ({len(tester.config.DEFAULT_SERVO_IDS)} total)")
-    print("Movement Tests: DISABLED (Motionless scan)")
-    print("=" * 60)
+    print("=" * 70)
+    print("Choose operation mode:")
+    print("1. Single scan test (discover and test all servos)")
+    print("2. Continuous monitoring with real-time charts")
+    print("3. Exit")
+    print("=" * 70)
     
-    # Run comprehensive test WITHOUT movement
-    results = tester.run_comprehensive_test(test_movement=False)
+    try:
+        choice = input("Enter your choice (1-3): ").strip()
+    except KeyboardInterrupt:
+        print("\nExiting...")
+        return
     
-    # Save results
-    json_file, csv_file, availability_file = tester.save_results()
+    if choice == "1":
+        # Original single scan functionality
+        tester = ServoTester()
+        
+        print("\n" + "=" * 60)
+        print("   SINGLE SCAN MODE")
+        print("=" * 60)
+        print(f"Port: {tester.port}")
+        print(f"Baudrate: {tester.baudrate}")
+        print(f"Testing Servo IDs: 0-{len(tester.config.DEFAULT_SERVO_IDS)-1} ({len(tester.config.DEFAULT_SERVO_IDS)} total)")
+        print("Movement Tests: DISABLED (Motionless scan)")
+        print("=" * 60)
+        
+        # Run comprehensive test WITHOUT movement
+        results = tester.run_comprehensive_test(test_movement=False)
+        
+        # Save results
+        json_file, csv_file, availability_file = tester.save_results()
+        
+        print("\n" + "=" * 60)
+        print("   TEST COMPLETED")
+        print("=" * 60)
+        print(f"Servos Found: {len(results['available_servos'])}")
+        if results['available_servos']:
+            print(f"Found Servo IDs: {results['available_servos']}")
+            print("Servo Details:")
+            for servo_id in results['available_servos']:
+                status = results['servo_status'][servo_id]
+                details = [f"ID: {servo_id}"]
+                if status.get('angle') is not None:
+                    details.append(f"Angle: {status['angle']:.1f}°")
+                if status.get('voltage') is not None:
+                    details.append(f"Voltage: {status['voltage']:.1f}V")
+                if status.get('temperature') is not None:
+                    details.append(f"Temp: {status['temperature']:.0f}°C")
+                print(f"  - {' | '.join(details)}")
+        else:
+            print("No servos found - Check connections and power supply")
+        print(f"Total Errors: {len(results['errors'])}")
+        print("Results saved to:")
+        print(f"  - {json_file}")
+        print(f"  - {csv_file}")
+        print(f"  - {availability_file}")
+        print("=" * 60)
+        
+    elif choice == "2":
+        # Continuous monitoring mode
+        print("\n" + "=" * 60)
+        print("   CONTINUOUS MONITORING MODE")
+        print("=" * 60)
+        print("Starting real-time servo monitoring...")
+        print("This will display live charts of servo parameters.")
+        print("Press Ctrl+C to stop monitoring.")
+        print("=" * 60)
+        
+        try:
+            start_continuous_monitoring()
+        except KeyboardInterrupt:
+            print("\nMonitoring stopped by user.")
+        except Exception as e:
+            print(f"\nMonitoring error: {e}")
     
-    print("\n" + "=" * 60)
-    print("   TEST COMPLETED")
-    print("=" * 60)
-    print(f"Servos Found: {len(results['available_servos'])}")
-    if results['available_servos']:
-        print(f"Found Servo IDs: {results['available_servos']}")
-        print("Servo Details:")
-        for servo_id in results['available_servos']:
-            status = results['servo_status'][servo_id]
-            details = [f"ID: {servo_id}"]
-            if status.get('angle') is not None:
-                details.append(f"Angle: {status['angle']:.1f}°")
-            if status.get('voltage') is not None:
-                details.append(f"Voltage: {status['voltage']:.1f}V")
-            if status.get('temperature') is not None:
-                details.append(f"Temp: {status['temperature']:.0f}°C")
-            print(f"  - {' | '.join(details)}")
+    elif choice == "3":
+        print("Exiting...")
+        return
+    
     else:
-        print("No servos found - Check connections and power supply")
-    print(f"Total Errors: {len(results['errors'])}")
-    print("Results saved to:")
-    print(f"  - {json_file}")
-    print(f"  - {csv_file}")
-    print(f"  - {availability_file}")
-    print("=" * 60)
+        print("Invalid choice. Please run the script again and select 1, 2, or 3.")
 
 
 if __name__ == "__main__":

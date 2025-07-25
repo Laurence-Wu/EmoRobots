@@ -1,0 +1,104 @@
+{
+  "timestamp": "2025-07-25T12:44:45.434667",
+  "port": "/dev/tty.usbserial-14210",
+  "baudrate": 1000000,
+  "available_servos": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6
+  ],
+  "servo_status": {
+    "0": {
+      "servo_id": 0,
+      "online": true,
+      "angle": 0.1,
+      "voltage": 12.075,
+      "current": 0.03,
+      "power": 0.362,
+      "temperature": 30.00001738478403,
+      "status_flags": null,
+      "errors": [
+        "Servo 0: Voltage 12.075V exceeds limit 12.0V"
+      ]
+    },
+    "1": {
+      "servo_id": 1,
+      "online": true,
+      "angle": -87.0,
+      "voltage": 12.094,
+      "current": 4.025,
+      "power": 48.698,
+      "temperature": 30.767585883469337,
+      "status_flags": null,
+      "errors": [
+        "Servo 1: Voltage 12.094V exceeds limit 12.0V",
+        "Servo 1: Current 4.025A exceeds limit 2.0A"
+      ]
+    },
+    "2": {
+      "servo_id": 2,
+      "online": true,
+      "angle": 84.6,
+      "voltage": 12.171,
+      "current": 0.014,
+      "power": 0.17,
+      "temperature": 28.872696577683143,
+      "status_flags": null,
+      "errors": [
+        "Servo 2: Voltage 12.171V exceeds limit 12.0V"
+      ]
+    },
+    "3": {
+      "servo_id": 3,
+      "online": true,
+      "angle": 51.2,
+      "voltage": 12.113,
+      "current": 0.03,
+      "power": 0.363,
+      "temperature": 29.947304456894358,
+      "status_flags": null,
+      "errors": [
+        "Servo 3: Voltage 12.113V exceeds limit 12.0V"
+      ]
+    },
+    "4": {
+      "servo_id": 4,
+      "online": true,
+      "angle": -103.8,
+      "voltage": 12.065,
+      "current": 0.03,
+      "power": 0.362,
+      "temperature": 28.22278660256626,
+      "status_flags": null,
+      "errors": [
+        "Servo 4: Voltage 12.065V exceeds limit 12.0V"
+      ]
+    },
+    "6": {
+      "servo_id": 6,
+      "online": true,
+      "angle": 57.0,
+      "voltage": 11.997,
+      "current": 0.03,
+      "power": 0.36,
+      "temperature": 29.526600775476936,
+      "status_flags": null,
+      "errors": []
+    }
+  },
+  "test_summary": {
+    "total_servos_tested": 6,
+    "online_servos": 6,
+    "servos_with_errors": 5,
+    "servos_with_safety_issues": 5,
+    "movement_test_summary": {
+      "servos_tested": 0,
+      "successful_movements": 0,
+      "failed_movements": 0
+    }
+  },
+  "errors": []
+}
