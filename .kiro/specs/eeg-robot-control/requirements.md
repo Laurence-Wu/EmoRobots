@@ -37,6 +37,9 @@ This feature integrates EEG-based brain-computer interface capabilities with the
 2. WHEN sending robot commands THEN the system SHALL use LeRobot's standardized command format
 3. IF the robot connection fails THEN the system SHALL retry connection up to 3 times before alerting the user
 4. WHEN the robot is busy executing a command THEN the system SHALL queue new commands or reject them based on configuration
+5. IF connection is refused during initialization THEN the system SHALL enter safe mode with EEG monitoring only and display clear error messages
+6. IF connection is lost during operation THEN the system SHALL immediately stop sending commands and attempt reconnection
+7. WHEN connection cannot be established after retries THEN the system SHALL log the failure reason and provide troubleshooting guidance
 
 ### Requirement 4
 
@@ -48,6 +51,8 @@ This feature integrates EEG-based brain-computer interface capabilities with the
 2. WHEN an emergency stop is triggered THEN the system SHALL log the event with timestamp and EEG data
 3. WHEN in emergency stop mode THEN the system SHALL require manual reset before accepting new commands
 4. IF emergency patterns cannot be detected reliably THEN the system SHALL provide alternative manual emergency stop mechanisms
+5. IF robot connection is refused during emergency stop THEN the system SHALL continue attempting to send stop commands and alert all operators
+6. WHEN connection failures occur during critical operations THEN the system SHALL assume worst-case scenario and maintain emergency protocols
 
 ### Requirement 5
 
@@ -62,6 +67,19 @@ This feature integrates EEG-based brain-computer interface capabilities with the
 
 ### Requirement 6
 
+**User Story:** As a system operator, I want comprehensive error handling for connection failures, so that I understand what went wrong and how to fix it.
+
+#### Acceptance Criteria
+
+1. WHEN robot connection is refused THEN the system SHALL display specific error codes and potential causes (network issues, robot offline, authentication failure, port conflicts)
+2. WHEN connection timeouts occur THEN the system SHALL distinguish between network latency and robot unresponsiveness
+3. IF LeRobot service is not running THEN the system SHALL provide instructions for starting the service
+4. WHEN authentication fails THEN the system SHALL guide the user through credential verification
+5. IF multiple connection attempts fail THEN the system SHALL suggest checking robot power, network connectivity, and firewall settings
+6. WHEN connection is restored after failure THEN the system SHALL verify robot state before resuming operations
+
+### Requirement 7
+
 **User Story:** As a researcher, I want to record and analyze EEG-to-robot control sessions, so that I can study the effectiveness of different control strategies.
 
 #### Acceptance Criteria
@@ -70,3 +88,4 @@ This feature integrates EEG-based brain-computer interface capabilities with the
 2. WHEN commands are executed THEN the system SHALL log timing, accuracy, and success rates
 3. WHEN a session ends THEN the system SHALL save all data in a structured format for analysis
 4. IF storage space is limited THEN the system SHALL compress older session data automatically
+5. WHEN connection failures occur during recording THEN the system SHALL continue logging EEG data and mark periods of robot disconnection

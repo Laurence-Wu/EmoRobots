@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+TuyaOS Build Script for LVGL Demo Project
+Target: T5-E1 IPEX Development Board
+Author: TuyaOS Development Team
+Date: 2025
+"""
+
+Import('env')
+
+# Project configuration
+PROJECT_NAME = 'tuya_lvgl_demo'
+
+# Source files
+sources = [
+    'tuya_app_main.c',
+    'driver/tuya_lcd.c',
+    'ui/ui.c',
+    'ui/font_dont_disturb.c',
+    'ui/font_please_disturb.c'
+]
+
+# Include directories
+include_dirs = [
+    '.',
+    'driver',
+    'ui'
+]
+
+# Components required
+components = [
+    'lvgl',
+    'tuya_spi',
+    'tuya_gpio'
+]
+
+# Compiler flags
+cflags = [
+    '-std=c99',
+    '-Wall',
+    '-Wextra',
+    '-O2'
+]
+
+# Linker flags
+ldflags = []
+
+# Build configuration
+env.Append(CPPPATH=include_dirs)
+env.Append(CFLAGS=cflags)
+env.Append(LINKFLAGS=ldflags)
+
+# Add component dependencies
+for component in components:
+    env.Append(LIBS=[component])
+
+# Build the project
+program = env.Program(
+    target=PROJECT_NAME,
+    source=sources
+)
+
+# Default build target
+Default(program)
+
+# Print build information
+print("=" * 60)
+print("TuyaOS LVGL Demo Project Build Configuration")
+print("=" * 60)
+print("Project Name: " + PROJECT_NAME)
+print("Target Board: T5-E1 IPEX Development Board")
+print("LCD Controller: ST7789V (240x320)")
+print("Graphics Library: LVGL")
+print("Source Files:")
+for src in sources:
+    print(f"  - {src}")
+print("Components:")
+for comp in components:
+    print(f"  - {comp}")
+print("=" * 60)
+
+# Additional build targets
+env.Alias('clean', env.Command('clean_target', [], 'rm -rf build/'))
+env.Alias('flash', env.Command('flash_target', [program], 'tuya_flash $SOURCE'))
+
+# Help information
+Help("""
+TuyaOS LVGL Demo Build System
+
+Targets:
+  (default)     Build the project
+  clean         Clean build files
+  flash         Flash the program to device
+
+Usage:
+  scons                 # Build project
+  scons clean           # Clean build
+  scons flash           # Flash to device
+  scons -c              # Clean build files
+
+Features:
+  - Two-page interactive UI
+  - Custom Chinese fonts (48px, 4bpp)
+  - ST7789V LCD driver
+  - Touch-free navigation with buttons
+  - Smooth page transitions
+
+Hardware Requirements:
+  - T5-E1 IPEX Development Board
+  - ST7789V LCD (240x320)
+  - Pin Configuration:
+    CS=P8, DC=P9, RST=P10, BL=P11
+""")
